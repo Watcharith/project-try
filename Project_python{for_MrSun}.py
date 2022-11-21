@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 from pandas.plotting import scatter_matrix
 import yfinance as yf
 import tkinter as tk
-print("Test")
+
 name = input().upper()
 started = input()
 ended = input()
-#sel = input().capitalize()
+sel = input().capitalize()
 
 plt.style.use("fivethirtyeight")
 
