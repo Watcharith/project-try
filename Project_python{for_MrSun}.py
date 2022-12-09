@@ -113,7 +113,8 @@ class Plotting(caluclate):
         plt.xlabel("Date")
         plt.ylabel("Price")
         plt.legend(loc = "upper left")
-def main()
+def main():
+    return True
 pp = Plotting(name)
 pp.calculate()
 pp.rsi()
