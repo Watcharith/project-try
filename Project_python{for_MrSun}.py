@@ -6,7 +6,7 @@ from pandas.plotting import scatter_matrix
 import yfinance as yf
 import tkinter as tk
 
-name = input().upper()
+name = input()
 started = input()
 ended = input()
 sel = input().capitalize()
@@ -15,6 +15,8 @@ plt.style.use("fivethirtyeight")
 
 def sma(data,per = 30 ,col = "Close"):
     return data[col].rolling(window = per).mean()
+
+
 
 class caluclate:
 
@@ -115,6 +117,8 @@ class Plotting(caluclate):
         plt.legend(loc = "upper left")
 def main():
     return True
+
+
 pp = Plotting(name)
 pp.calculate()
 pp.rsi()
