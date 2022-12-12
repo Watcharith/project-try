@@ -125,16 +125,17 @@ class Plotting(Calculate):
         plt.legend(loc = "best")
         plt.show()
 
-def defa(x = "Closee"):
-    plt.figure(figsize=(12.2,6.4))
-    plt.plot(p.df.index,p.df[x])
-    plt.legend(loc = "best")
-    plt.title(x+"Price")
-    plt.xlabel("Date")
-    plt.ylabel("Price")
-    plt.show()
+    def defa(self,x = "Close"):
+        plt.figure(figsize=(12.2,6.4))
+        plt.plot(self.df.index,self.df[x])
+        plt.legend(loc = "best")
+        plt.title(x+"Price")
+        plt.xlabel("Date")
+        plt.ylabel("Price")
+        plt.show()
 
 p = Plotting()
+
 def time_check(r):
     dict1={1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31}
     if r=='':
@@ -181,7 +182,7 @@ def main(st,start_date_o,end_date_o,cc,indi):
             if len(p.df) == 0:
                 messagebox.showerror('Error','Invalid input')    
             elif e == "Default" :
-                defa(d)
+                p.defa(d)
             elif e == "Short-Long Ema":
                 p.short_long_plot(d)
             elif e == "MACD-Signal":
@@ -197,7 +198,6 @@ def main(st,start_date_o,end_date_o,cc,indi):
 
 
 def gui():
-    p = Plotting()
 
     windows = tk.Tk()
     in_frame = tk.Frame(windows)
