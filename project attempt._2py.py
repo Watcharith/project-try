@@ -60,8 +60,8 @@ class Calculate:
             else:
                 buy.append(np.nan)
                 sell.append(np.nan)
-        self.df["Sell"] = buy #has been change
-        self.df["Buy"] = sell
+        self.df["Sell"] = sell
+        self.df["Buy"] = buy
     def sma_cal(self ,col = "Close"):
         return  self.df[col].rolling(window = 14).mean()
     def rsi_cal(self, x = "Close"):
