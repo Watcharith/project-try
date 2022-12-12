@@ -14,14 +14,15 @@ class Calculate:
     def __init__(self):
         self.df = ""
     def down(self, name,start_date = "", end_date = ""):
-        if start_date == "" and end_date == "":
-            self.df = yf.download(name)
-        elif start_date == "":
-            self.df = yf.download(name, end= end_date)
-        elif end_date == "" :
-            self.df = yf.download(name, start= start_date)
-        else:
-            self.df = yf.download(name, start= start_date, end= end_date)
+            if start_date == "" and end_date == "":
+                self.df = yf.download(name)
+            elif start_date == "":
+                self.df = yf.download(name, end= end_date)
+            elif end_date == "" :
+                self.df = yf.download(name, start= start_date)
+            else:
+                self.df = yf.download(name, start= start_date, end= end_date)     
+       
     def short_long(self, x = "Close"):
         self.x = x
         self.short = self.df[x].ewm(span = 12, adjust = False).mean()
@@ -39,7 +40,7 @@ class Calculate:
         self.macd_sig(x)
 
         buy = []
-        sell = []
+        sell = []     
         flag = -1
         for i in range(0, len(self.df)):
             if self.df["MACD"][i] > self.df["signal"][i]:
@@ -108,8 +109,8 @@ class Plotting(Calculate):
         plt.figure(figsize=(12.2,4.5))
         plt.scatter(self.df.index,self.df["Buy"],label = "Buy", color = "green", marker = "^", alpha = 1)
         plt.scatter(self.df.index,self.df["Sell"],label = "Sell", color = "red", marker = "v", alpha = 1)
-        self.df[self.x].plot(label = self.x+" Price", alpha = 0.35)
-        plt.title(self.x+ " : Buy_Sell")
+        self.df[x].plot(label = x+" Price", alpha = 0.35)
+        plt.title(x+ " : Buy_Sell")
         plt.xlabel("Date")
         plt.ylabel("Price")
         plt.legend(loc = "best")
@@ -124,38 +125,6 @@ class Plotting(Calculate):
         plt.legend(loc = "best")
         plt.show()
 
-
-p = Plotting()
-
-windows = tk.Tk()
-in_frame = tk.Frame(windows)
-in_frame.pack()
-
-
-tk.Label(in_frame,text="Input the Stock's Abbreviation").grid(row=0,column=0)
-st = tk.Entry(in_frame)
-st.grid(row = 0,column=1)
-
-tk.Label(in_frame,text="Start Date [year(XXXX)-month(XX)-days(XX)] : ").grid(row=1,column=0)
-start_date = tk.Entry(in_frame)
-start_date.grid(row = 1,column=1)
-
-tk.Label(in_frame,text="End Date [year(XXXX)-month(XX)-days(XX)] : ").grid(row=2,column=0)
-end_date = tk.Entry(in_frame)
-end_date.grid(row = 2,column= 1)
-
-tk.Label(in_frame,text = "Chice What type of Graph").grid(row = 3,column= 0)
-cc = tk.StringVar(value="Close")
-choice = ttk.Combobox(in_frame,textvariable= cc)
-choice["values"] = ["Close","Open","High","Low"]
-choice.grid(row = 3,column=1)
-
-tk.Label(in_frame, text= "What indicator do you want").grid(row = 4,column= 0)
-indi = tk.StringVar(value = "Default")
-choose = ttk.Combobox(in_frame, textvariable= indi)
-choose["value"] = ["Default","Short-Long Ema","MACD-Signal","Buy and Sell","RSI"]
-choose.grid(row = 4, column=1)
-
 def defa(x = "Closee"):
     plt.figure(figsize=(12.2,6.4))
     plt.plot(p.df.index,p.df[x])
@@ -165,30 +134,102 @@ def defa(x = "Closee"):
     plt.ylabel("Price")
     plt.show()
 
-def main():
+p = Plotting()
+def time_check(r):
+    dict1={1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31}
+    if r=='':
+        return True
+    try:
+        list2=r.split('-')
+        if len(list2)!=3:
+            return False 
+        if  not 1990<=int(list2[0])<=2023:
+            return False
+        if not 1<=int(list2[1])<=12:
+            return False
+        if not 1<=int(list2[2])<=dict1[int(list2[1])]:      
+            return False
+        nnn = datetime.datetime.now()
+        nnn = str(nnn).split()
+        sss=nnn[0].split('-')
+        if int(list2[0])>int(sss[0]):
+            return False
+        if int(list2[1])>int(sss[1]):
+            return False
+        if int(list2[2])>int(sss[2]):
+            return False    
+        return True
+    except:
+        messagebox.showerror('Error','Invalid input')
+        return False            
+
+                        
+
+
+
+def main(st,start_date_o,end_date_o,cc,indi):
     a = st.get()
-    b = start_date.get()
-    c = end_date.get()
+    b = start_date_o.get()
+    c = end_date_o.get()
     d = cc.get()
     e = indi.get()
-    try:
-        p.down(a,b,c)
-        if e == "Default" :
-            defa(d)
-        elif e == "Short-Long Ema":
-            p.short_long_plot(d)
-        elif e == "MACD-Signal":
-            p.macd_sig_plot(d)
-        elif e == "Buy and Sell":
-            p.buy_sell_plot(d)
-        elif e == "RSI":
-            p.rsi_plot(d)
-    except:
-        messagebox.showinfo("Invalid input")
+    check_1=time_check(b)
+    check_2=time_check(c)
+    if check_1 == True and check_2 == True:
+        try:
+            p.down(a,b,c)
+            if len(p.df) == 0:
+                messagebox.showerror('Error','Invalid input')    
+            elif e == "Default" :
+                defa(d)
+            elif e == "Short-Long Ema":
+                p.short_long_plot(d)
+            elif e == "MACD-Signal":
+                p.macd_sig_plot(d)
+            elif e == "Buy and Sell":
+                p.buy_sell_plot(d)
+            elif e == "RSI":
+                p.rsi_plot(d)
+        except:
+            messagebox.showerror("remind",'Invalid input')
+    else:
+        messagebox.showerror('Error_date',"Error Date")        
 
 
-sci=tk.Button(in_frame,text="Send info",command=main,bg="#C19A6B",fg="black")
-sci.grid(row = 6,column=3)
+def gui():
+    p = Plotting()
+
+    windows = tk.Tk()
+    in_frame = tk.Frame(windows)
+    in_frame.pack()
+
+    tk.Label(in_frame,text="Input the Stock's Abbreviation").grid(row=0,column=0)
+    st = tk.Entry(in_frame)
+    st.grid(row = 0,column=1)
+    
+    tk.Label(in_frame,text="Start Date [year(XXXX)-month(XX)-days(XX)] : ").grid(row=1,column=0)
+    start_date_r = tk.Entry(in_frame)
+    start_date_r.grid(row = 1,column=1)
+
+    tk.Label(in_frame,text="End Date [year(XXXX)-month(XX)-days(XX)] : ").grid(row=2,column=0)
+    end_date_r = tk.Entry(in_frame)
+    end_date_r.grid(row = 2,column= 1)
+
+    tk.Label(in_frame,text = "Chice What type of Graph").grid(row = 3,column= 0)
+    cc = tk.StringVar(value="Close")
+    choice = ttk.Combobox(in_frame,textvariable= cc)
+    choice["values"] = ["Close","Open","High","Low"]
+    choice.grid(row = 3,column=1)
+
+    tk.Label(in_frame, text= "What indicator do you want").grid(row = 4,column= 0)
+    indi = tk.StringVar(value = "Default")
+    choose = ttk.Combobox(in_frame, textvariable= indi)
+    choose["value"] = ["Default","Short-Long Ema","MACD-Signal","Buy and Sell","RSI"]
+    choose.grid(row = 4, column=1)
+    sci=tk.Button(in_frame,text="Send info",command=lambda:main(st,start_date_r,end_date_r,cc,indi),bg="#C19A6B",fg="black")
+    sci.grid(row = 6,column=3)
 
 
-windows.mainloop()
+    windows.mainloop()
+
+gui()
