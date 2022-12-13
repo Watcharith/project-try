@@ -46,14 +46,14 @@ class Calculate:
             if self.df["MACD"][i] > self.df["signal"][i]:
                 sell.append(np.nan)
                 if flag != 1:
-                    buy.append(self.df["Close"][i])
+                    buy.append(self.df[x][i])
                     flag = 1
                 else:
                     buy.append(np.nan)
             elif self.df["MACD"][i] < self.df["signal"][i]:
                 buy.append(np.nan)
                 if flag != 0:
-                    sell.append(self.df["Close"][i])
+                    sell.append(self.df[x][i])
                     flag = 0
                 else:
                     sell.append(np.nan)
@@ -143,7 +143,9 @@ def time_check(r):
     try:
         list2=r.split('-')
         if len(list2)!=3:
-            return False 
+            return False
+        if len(list2) == 2:
+            list2.append("01")
         if  not 1990<=int(list2[0])<=2023:
             return False
         if not 1<=int(list2[1])<=12:
@@ -174,6 +176,8 @@ def main(st,start_date_o,end_date_o,cc,indi):
     c = end_date_o.get()
     d = cc.get()
     e = indi.get()
+    if len(b.split("-")) == 2:
+        b = b+"-01"
     check_1=time_check(b)
     check_2=time_check(c)
     if check_1 == True and check_2 == True:
@@ -215,7 +219,7 @@ def gui():
     end_date_r = tk.Entry(in_frame,bg="#FFDDF4")
     end_date_r.grid(row = 2,column= 1)
 
-    tk.Label(in_frame,text = "Choose What type of Graph",bg= "#FFCFF1").grid(row = 3,column= 0)
+    tk.Label(in_frame,text = "Choose the info",bg= "#FFCFF1").grid(row = 3,column= 0)
     cc = tk.StringVar(value="Close")
     choice = ttk.Combobox(in_frame,textvariable= cc)
     choice["values"] = ["Close","Open","High","Low"]
