@@ -127,7 +127,7 @@ class Plotting(Calculate):
 
     def defa(self,x = "Close"):
         plt.figure(figsize=(12.2,6.4))
-        plt.plot(self.df.index,self.df[x])
+        plt.plot(self.df.index,self.df[x],label = "Price")
         plt.legend(loc = "best")
         plt.title(x+"Price")
         plt.xlabel("Date")
@@ -200,33 +200,33 @@ def main(st,start_date_o,end_date_o,cc,indi):
 def gui():
 
     windows = tk.Tk()
-    in_frame = tk.Frame(windows)
+    in_frame = tk.Frame(windows,bg= "#FFCFF1")
     in_frame.pack()
 
-    tk.Label(in_frame,text="Input the Stock's Abbreviation").grid(row=0,column=0)
-    st = tk.Entry(in_frame)
+    tk.Label(in_frame,text="Input the Stock's Abbreviation",bg= "#FFCFF1").grid(row=0,column=0)
+    st = tk.Entry(in_frame,bg="#FFDDF4")
     st.grid(row = 0,column=1)
     
-    tk.Label(in_frame,text="Start Date [year(XXXX)-month(XX)-days(XX)] : ").grid(row=1,column=0)
-    start_date_r = tk.Entry(in_frame)
+    tk.Label(in_frame,text="Start Date [year(XXXX)-month(XX)-days(XX)] : ",bg= "#FFCFF1").grid(row=1,column=0)
+    start_date_r = tk.Entry(in_frame,bg="#FFDDF4")
     start_date_r.grid(row = 1,column=1)
 
-    tk.Label(in_frame,text="End Date [year(XXXX)-month(XX)-days(XX)] : ").grid(row=2,column=0)
-    end_date_r = tk.Entry(in_frame)
+    tk.Label(in_frame,text="End Date [year(XXXX)-month(XX)-days(XX)] : ",bg= "#FFCFF1").grid(row=2,column=0)
+    end_date_r = tk.Entry(in_frame,bg="#FFDDF4")
     end_date_r.grid(row = 2,column= 1)
 
-    tk.Label(in_frame,text = "Chice What type of Graph").grid(row = 3,column= 0)
+    tk.Label(in_frame,text = "Choose What type of Graph",bg= "#FFCFF1").grid(row = 3,column= 0)
     cc = tk.StringVar(value="Close")
     choice = ttk.Combobox(in_frame,textvariable= cc)
     choice["values"] = ["Close","Open","High","Low"]
     choice.grid(row = 3,column=1)
 
-    tk.Label(in_frame, text= "What indicator do you want").grid(row = 4,column= 0)
+    tk.Label(in_frame, text= "What indicator do you want",bg= "#FFCFF1").grid(row = 4,column= 0)
     indi = tk.StringVar(value = "Default")
     choose = ttk.Combobox(in_frame, textvariable= indi)
     choose["value"] = ["Default","Short-Long Ema","MACD-Signal","Buy and Sell","RSI"]
     choose.grid(row = 4, column=1)
-    sci=tk.Button(in_frame,text="Send info",command=lambda:main(st,start_date_r,end_date_r,cc,indi),bg="#C19A6B",fg="black")
+    sci=tk.Button(in_frame,text="Send info",command=lambda:main(st,start_date_r,end_date_r,cc,indi),bg="#F7BFBE",fg="black")
     sci.grid(row = 6,column=3)
 
 
